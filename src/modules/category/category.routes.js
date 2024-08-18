@@ -8,9 +8,21 @@ import { CheckRolesGuard } from "../../guards/check-role.guard.js";
 
 const router = Router();
 
-router.post("/", [upload.single("image"), checkAuthGuard(true), CheckRolesGuard("admin", "super_admin"),ValidationMiddleware(createCategorySchema)],categoryController.createCategory);
+// create category
+router.post(
+  "/",
+  [
+    upload.single("image"),
+    checkAuthGuard(true),
+    CheckRolesGuard("admin", "super_admin"),
+    ValidationMiddleware(createCategorySchema),
+  ],
+  categoryController.createCategory
+);
+// create category
 
-export default router
+// get all categories
+router.get("/", checkAuthGuard(false), categoryController.getCategories);
+// get all categories
 
-
-
+export default router;
