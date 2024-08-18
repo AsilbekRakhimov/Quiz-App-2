@@ -25,7 +25,6 @@ export const verifyToken = (token, secretKey) => {
     if (decoded) {
       response = decoded;
     }
-
     if (err instanceof jwt.JsonWebTokenError) {
       throw new JwtTokenError("Token is invalid");
     }
