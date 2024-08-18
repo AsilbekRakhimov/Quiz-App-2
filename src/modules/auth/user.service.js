@@ -24,8 +24,8 @@ class UsersService {
         role,
         photo,
       });
-      const accessToken = signAccessToken({ id: user._id, role: user.role });
-      const refreshToken = signRefreshToken({ id: user._id, role: user.role });
+      const accessToken = signAccessToken({ id: user[0]._id, role: user[0].role });
+      const refreshToken = signRefreshToken({ id: user[0]._id, role: user[0].role });
       return { user, accessToken, refreshToken };
     } catch (error) {
       throw new SignError("Error in service while sign up user");

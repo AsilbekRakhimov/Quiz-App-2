@@ -5,7 +5,8 @@ import { verifyToken } from "../helper/jwt.helper.js";
 export const checkAuthGuard = (isAuth) => {
   return (req, _, next) => {
     if (!isAuth) {
-      (req.role = "user"), next();
+      req.role = "user", 
+      next();
       return;
     }
 
@@ -16,9 +17,9 @@ export const checkAuthGuard = (isAuth) => {
       !bearerToken.startsWith("Bearer ") ||
       !bearerToken.split("Bearer ")[1]
     ) {
-      throw UnAuthorizedError("There is error with token");
+      throw new UnAuthorizedError("There is error with token");
     }
-
+  
     const token = bearerToken.split("Bearer ")[1];
     const response = verifyToken(token, jwtConfig.jwt_access_key);
     req.id = response.id;
