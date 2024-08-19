@@ -1,4 +1,5 @@
 import { CreateError } from "../../errors/create.error.js";
+import { DeleteDataError } from "../../errors/delete-data.error.js";
 import { GetDataError } from "../../errors/get-data.error.js";
 import { UpdateDataError } from "../../errors/update-data.error.js";
 import { category } from "../category/category.schema.js";
@@ -78,7 +79,7 @@ class SubCategoryService {
   // get all sub categories
 
   // get one cayegory
-  async getOneCategory(language, id) {
+  async getOneSubCategory(language, id) {
     try {
       if (language == "uzbek") {
         const data = await this.#_sub_category
@@ -124,13 +125,23 @@ class SubCategoryService {
             description_ru,
             description_uz, 
         })
-        console.log(data);
         return data
     } catch (error) {
         throw UpdateDataError("Error in service while updating sub category")
     }
   }
   // update sub category
+
+  // delete sub-category
+  async deleteOneSubCategory(id){
+    try {
+        const data = await this.#_sub_category.findByIdAndDelete(id);
+        return data;
+    } catch (error) {
+        throw new DeleteDataError("Error in service while deleting sub-category")
+    }
+  }
+  // delete sub-category
 }
 
 export default new SubCategoryService();
