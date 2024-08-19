@@ -48,6 +48,56 @@ class CategoryController{
     }
     // get all categories
 
+    // get one category
+    getCategory = async (req, res) => {
+        try {
+            const language = req.headers["accept-language"];
+            const id = req.params.id
+            const data = await this.#_service.getOneCategory(language, id);
+            if (data) {
+                res.status(200).send({
+                    data:data,
+                    message:"One category"
+                });
+                return ;
+            }
+            res.status(404).send({
+                message:"Data is not found"
+            })
+        } catch (error) {
+            res.status(409).send({
+                name:error.name,
+                message:"Error in get one category"
+            })
+        }
+    }
+    // get one category
+
+    // update category
+    updateCategory = async (req, res) => {
+        try {
+            const id = req.params.id
+            const image = req?.file?.filename || null
+            const data = await this.#_service.updateOneCategory({...req.body, image, id});
+            if (!data) {
+                res.status(404).send({
+                    message:"Category is not found"
+                });
+                return;
+            }
+            res.status(200).send({
+                message:"Category is updated"
+            })
+        } catch (error) {
+            res.status(400).send({
+                name:error.name,
+                message:error.message
+            })
+        }
+    }
+    // update category
+
+
 }
 
 export default new CategoryController()
