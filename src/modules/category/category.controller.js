@@ -77,7 +77,7 @@ class CategoryController{
     updateCategory = async (req, res) => {
         try {
             const id = req.params.id
-            const image = req?.file?.filename || null
+            const image = req?.file?.filename
             const data = await this.#_service.updateOneCategory({...req.body, image, id});
             if (!data) {
                 res.status(404).send({
@@ -96,6 +96,28 @@ class CategoryController{
         }
     }
     // update category
+
+    // delete category
+    deleteCategory = async (req, res) => {
+        try {
+            const data = await this.#_service.deleteOneCategory(req.params.id);
+            if (data) {
+                res.status(200).send({
+                    message:"Category is deleted"
+                });
+                return;
+            }
+            res.status(404).send({
+                message:"Category is not found"
+            })
+        } catch (error) {
+            res.status(400).send({
+                name:error.name,
+                message:error.message
+            })
+        }
+    }
+    // delete category
 
 
 }

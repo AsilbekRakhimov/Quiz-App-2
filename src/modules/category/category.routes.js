@@ -43,4 +43,12 @@ router.put(
 );
 // update category
 
+// delete category
+router.delete(
+  "/:id",
+  [checkAuthGuard(true), CheckRolesGuard("admin", "super admin")],
+  categoryController.deleteCategory
+);
+// delete category
+
 export default router;
