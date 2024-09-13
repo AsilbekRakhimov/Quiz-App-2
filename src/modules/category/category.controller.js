@@ -119,7 +119,7 @@ class CategoryController{
     }
     // delete category
 
-
+    async #_checkCategory(id) {}
 }
 
 export default new CategoryController()

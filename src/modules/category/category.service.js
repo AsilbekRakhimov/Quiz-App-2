@@ -3,7 +3,7 @@ import { DeleteDataError } from "../../errors/delete-data.error.js";
 import { GetDataError } from "../../errors/get-data.error.js";
 import { UpdateDataError } from "../../errors/update-data.error.js";
 import { category } from "./category.schema.js";
-import fs from 'fs';
+import fs from "fs";
 import path from "path";
 
 class CategoryService {
@@ -37,54 +37,61 @@ class CategoryService {
       throw new CreateError("Error in service while creating category");
     }
   }
-  // create category
 
   // get all categories
   async getAllCategories(language) {
     try {
-      if (language == "uzbek") {
-        const data = await this.#_model
-          .find().populate("sub_categories", "name_uz description_uz")
-          .select("name_uz description_uz image sub_categories");
-        return data;
+      const data = await this.#_model
+        .find()
+        .populate("sub_categories", `name_${language} description_${language}`)
+        .select(
+          `name_${language} description_${language} image sub_categories`
+        );
+      let obj = {};
+      const category = [];
+      for (let i = 0; i < data.length; i++) {
+        obj["id"] = data[i]._id;
+        obj["name"] = data[i]['name_' + language];
+        obj["description"] = data[i][`description_${language}`];
+        obj["image"] = data[i].image;
+        obj["sub_categories"] = []
+        for (let j = 0; j < data[i]["sub_categories"].length; j++){
+          let obj1 = {}
+          obj1["name"] = data[i]["sub_categories"][j][`name_${language}`]
+          obj1["description"] = data[i]["sub_categories"][j][`description_${language}`]
+          obj["sub_categories"].push(obj1)
+          obj1 = {}
+        }
+        category.push(obj)
+        obj = {};
       }
-      if (language == "english") {
-        const data = await this.#_model
-          .find().populate("sub_categories", "name_en description_en")
-          .select("name_en description_en image sub_categories");
-        return data;
-      }
-      if (language == "russian") {
-        const data = await this.#_model
-          .find().populate("sub_categories", "name_ru description_ru")
-          .select("name_ru description_ru image sub_categories");
-        return data;
-      }
-      return null;
+      return category;
     } catch (error) {
       throw new GetDataError("Error in service while getting all categories");
     }
   }
-  // get all categories
 
   // get one category
   async getOneCategory(language, id) {
     try {
       if (language == "uzbek") {
         const data = await this.#_model
-          .findById(id).populate("sub_categories", "name_uz description_uz")
+          .findById(id)
+          .populate("sub_categories", "name_uz description_uz")
           .select("name_uz description_uz image sub_categories");
         return data;
       }
       if (language == "english") {
         const data = await this.#_model
-          .findById(id).populate("sub_categories", "name_en description_en")
+          .findById(id)
+          .populate("sub_categories", "name_en description_en")
           .select("name_en description_en image sub_categories");
         return data;
       }
       if (language == "russian") {
         const data = await this.#_model
-          .findById(id).populate("sub_categories", "name_ru description_ru")
+          .findById(id)
+          .populate("sub_categories", "name_ru description_ru")
           .select("name_ru description_ru image sub_categories");
         return data;
       }
@@ -93,7 +100,6 @@ class CategoryService {
       throw new GetDataError("Error in service while getting one category");
     }
   }
-  // get one category
 
   // update one category
   async updateOneCategory({
@@ -109,14 +115,17 @@ class CategoryService {
     try {
       const category = await this.#_model.findById(id);
       if (!category) {
-        return null
+        return null;
       }
       if (image) {
-        fs.unlink(path.join(process.cwd(), "uploads", category?.image), (err) => {
+        fs.unlink(
+          path.join(process.cwd(), "uploads", category?.image),
+          (err) => {
             if (err) {
               throw err;
             }
-          });
+          }
+        );
       }
       const data = await this.#_model.findByIdAndUpdate(id, {
         name_uz: name_uz,
@@ -132,18 +141,16 @@ class CategoryService {
       throw new UpdateDataError("Error in service while updating category");
     }
   }
-  // update one category
 
-  // delete category 
-  async deleteOneCategory(id){
+  // delete category
+  async deleteOneCategory(id) {
     try {
-        const data = await this.#_model.findByIdAndDelete(id);
-        return data;
+      const data = await this.#_model.findByIdAndDelete(id);
+      return data;
     } catch (error) {
-        throw new DeleteDataError("Error in service while deleting category")
+      throw new DeleteDataError("Error in service while deleting category");
     }
   }
-  // delete category 
 }
 
 export default new CategoryService();

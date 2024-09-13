@@ -7,7 +7,7 @@ class UserController {
   }
 
   // sign up user
-  signUp = async (req, res) => {
+  signUp = async (req, res, next) => {
     try {
       const photo = req.file.filename;
       const user = await this.#_service.signUpUser({ photo, ...req.body });
@@ -16,9 +16,10 @@ class UserController {
         message: "User signed up succesfully",
       });
     } catch (error) {
-      res.status(400).send({
-        message: "There is error in user signed up",
-      });
+      next(error)
+      // res.status(400).send({
+      //   message: "There is error in user signed up",
+      // });
     }
   };
   // sign up user

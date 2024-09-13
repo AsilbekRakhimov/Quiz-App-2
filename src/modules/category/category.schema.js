@@ -3,15 +3,18 @@ import mongoose from "mongoose";
 const categorySchema = new mongoose.Schema({
     name_uz:{
         type:String,
-        required:true
+        required:true,
+        alias:"name"
     },
     name_ru:{
         type:String,
-        required:true
+        required:true,
+        alias:"name"
     },
     name_en:{
         type:String,
-        required:true
+        required:true,
+        alias:"name"
     },
     description_uz:{
         type:String

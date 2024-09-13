@@ -15,9 +15,9 @@ class UsersService {
   }
 
   // signUp user
-  async signUpUser({ full_name, email, password, role, photo }) {
+  async signUpUser({ full_name, email, password, photo }) {
     try {
-      const user = await this.#_model.insertMany({
+      const user = await this.#_model.create({
         full_name,
         email,
         password,
@@ -31,7 +31,7 @@ class UsersService {
       throw new SignError("Error in service while sign up user");
     }
   }
-  // signUp user
+  // signUp userrole
 
   // sign in user
   async signInUser({ email, password }) {
