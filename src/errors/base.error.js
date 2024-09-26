@@ -1,6 +1,6 @@
-export class BaseError extends Error{
-    constructor(){
-        super()
-        this.isError = true
-    }
+export class BaseError extends Error {
+  constructor() {
+    super();
+    this.isError = true;
+  }
 }

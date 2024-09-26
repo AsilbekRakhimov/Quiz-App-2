@@ -51,18 +51,19 @@ class CategoryService {
       const category = [];
       for (let i = 0; i < data.length; i++) {
         obj["id"] = data[i]._id;
-        obj["name"] = data[i]['name_' + language];
+        obj["name"] = data[i]["name_" + language];
         obj["description"] = data[i][`description_${language}`];
         obj["image"] = data[i].image;
-        obj["sub_categories"] = []
-        for (let j = 0; j < data[i]["sub_categories"].length; j++){
-          let obj1 = {}
-          obj1["name"] = data[i]["sub_categories"][j][`name_${language}`]
-          obj1["description"] = data[i]["sub_categories"][j][`description_${language}`]
-          obj["sub_categories"].push(obj1)
-          obj1 = {}
+        obj["sub_categories"] = [];
+        for (let j = 0; j < data[i]["sub_categories"].length; j++) {
+          let obj1 = {};
+          obj1["name"] = data[i]["sub_categories"][j][`name_${language}`];
+          obj1["description"] =
+            data[i]["sub_categories"][j][`description_${language}`];
+          obj["sub_categories"].push(obj1);
+          obj1 = {};
         }
-        category.push(obj)
+        category.push(obj);
         obj = {};
       }
       return category;
@@ -74,28 +75,30 @@ class CategoryService {
   // get one category
   async getOneCategory(language, id) {
     try {
-      if (language == "uzbek") {
-        const data = await this.#_model
-          .findById(id)
-          .populate("sub_categories", "name_uz description_uz")
-          .select("name_uz description_uz image sub_categories");
-        return data;
+      const data = await this.#_model
+        .findById(id)
+        .populate("sub_categories", `name_${language} description_${language}`)
+        .select(
+          `name_${language} description_${language} image sub_categories`
+        );
+      let obj = {};
+      const category = [];
+      obj["id"] = data._id;
+      obj["name"] = data["name_" + language];
+      obj["description"] = data[`description_${language}`];
+      obj["image"] = data.image;
+      obj["sub_categories"] = [];
+      for (let j = 0; j < data["sub_categories"].length; j++) {
+        let obj1 = {};
+        obj1["name"] = data["sub_categories"][j][`name_${language}`];
+        obj1["description"] =
+          data["sub_categories"][j][`description_${language}`];
+        obj["sub_categories"].push(obj1);
+        obj1 = {};
       }
-      if (language == "english") {
-        const data = await this.#_model
-          .findById(id)
-          .populate("sub_categories", "name_en description_en")
-          .select("name_en description_en image sub_categories");
-        return data;
-      }
-      if (language == "russian") {
-        const data = await this.#_model
-          .findById(id)
-          .populate("sub_categories", "name_ru description_ru")
-          .select("name_ru description_ru image sub_categories");
-        return data;
-      }
-      return null;
+      category.push(obj);
+      obj = {};
+      return category;
     } catch (error) {
       throw new GetDataError("Error in service while getting one category");
     }

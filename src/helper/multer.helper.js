@@ -5,7 +5,7 @@ const storage = multer.diskStorage({
     cb(null, "./uploads");
   },
   filename: function (_, file, cb) {
-    const uniqueSuffix = Date.now() + Math.round(Math.random() * 1E9);
+    const uniqueSuffix = Date.now() + Math.round(Math.random() * 1e9);
     const fileKengaytmasi = file.mimetype.split("/")[1];
     cb(null, file.fieldname + "-" + uniqueSuffix + `.${fileKengaytmasi}`);
   },

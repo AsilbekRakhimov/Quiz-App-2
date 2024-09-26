@@ -15,7 +15,7 @@ class UsersService {
   }
 
   // signUp user
-  async signUpUser({ full_name, email, password, photo }) {
+  async signUpUser({ full_name, role, email, password, photo }) {
     try {
       const user = await this.#_model.create({
         full_name,
@@ -24,11 +24,11 @@ class UsersService {
         role,
         photo,
       });
-      const accessToken = signAccessToken({ id: user[0]._id, role: user[0].role });
-      const refreshToken = signRefreshToken({ id: user[0]._id, role: user[0].role });
+      const accessToken = signAccessToken({ id: user._id, role: user.role });
+      const refreshToken = signRefreshToken({ id: user._id, role: user.role });
       return { user, accessToken, refreshToken };
     } catch (error) {
-      throw new SignError("Error in service while sign up user");
+      throw new SignError(error.message);
     }
   }
   // signUp userrole
