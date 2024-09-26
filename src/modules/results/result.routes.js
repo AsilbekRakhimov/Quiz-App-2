@@ -19,7 +19,7 @@ router.post(
   resultController.createResult
 );
 
-// get all results
+// get all results part
 router.get("/", [checkAuthGuard(false)], resultController.getResults);
 
 // get one result
