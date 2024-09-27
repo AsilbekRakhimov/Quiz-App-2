@@ -1,25 +1,25 @@
 import mongoose from "mongoose";
 
-const optionSchema = new mongoose.Schema(
+const CommentSchema = new mongoose.Schema(
   {
-    option_uz: {
+    comment_uz: {
       type: String,
-      unique: false,
       required: true,
+      unique: false,
     },
-    option_ru: {
+    comment_ru: {
       type: String,
-      unique: false,
       required: true,
+      unique: false,
     },
-    option_en: {
+    comment_en: {
       type: String,
+      required: true,
       unique: false,
-      required: true,
     },
-    isCorrect: {
-      type: Boolean,
-      required: true,
+    userId: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "users",
     },
     questionId: {
       type: mongoose.SchemaTypes.ObjectId,
@@ -29,8 +29,8 @@ const optionSchema = new mongoose.Schema(
   {
     _id: true,
     timestamps: true,
-    collection: "options",
+    collection: "comments",
   }
 );
 
-export const Option = mongoose.model("options", optionSchema);
+export const Comment = mongoose.model("comments", CommentSchema);

@@ -23,8 +23,10 @@ app.use(bodyParser.json());
 // URL-encoded tipidagi ma'lumotlarni parse qilish
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
 // mongo databaseni ulash
 await mongo();
+
 
 // main endpoint
 app.use("/api/v1", router);
@@ -35,6 +37,7 @@ app.all("*", (_, res) => {
     message: "Url is not found",
   });
 });
+
 
 // xatoliklarni ushlash
 app.use(ErrorHandlerMiddleware);
