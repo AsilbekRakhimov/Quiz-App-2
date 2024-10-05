@@ -47,7 +47,28 @@ class QuizService {
         .find()
         .populate("questions")
         .select(`title_${language} minPassScore questions subCategoryId`);
-      return data;
+      const quizes = [];
+
+      for (let i = 0; i < data.length; i++) {
+        const obj = {};
+        obj["id"] = data[i]._id;
+        obj["title"] = data[i][`title_${language}`];
+        obj["minPassScore"] = data[i].minPassScore;
+        obj["subCategoryId"] = data[i].subCategoryId;
+        obj["questions"] = [];
+        for (let j = 0; j < data[i]["questions"].length; j++) {
+          let obj1 = {};
+          obj1["id"] = data[i]["questions"][j]["_id"];
+          obj1["title"] = data[i]["questions"][j][`title_${language}`];
+          obj1["image"] = data[i]["questions"][j][`image`];
+          obj1["quizId"] = data[i]["questions"][j][`quizId`];
+          obj1["options"] = data[i]["questions"][j][`options`];
+          obj["questions"].push(obj1);
+          obj1 = {};
+        }
+        quizes.push(obj);
+      }
+      return quizes;
     } catch (error) {
       throw new ConflictError(error.message);
     }
@@ -56,10 +77,29 @@ class QuizService {
   // get one quiz'
   async getOneQuiz(id, language) {
     try {
-      const quiz = await this.#_model
+      const data = await this.#_model
         .findById(id)
+        .populate("questions")
         .select(`title_${language} minPassScore questions subCategoryId`);
-      return quiz;
+      const quizes = [];
+
+      const obj = {};
+      obj["id"] = data._id;
+      obj["title"] = data[`title_${language}`];
+      obj["minPassScore"] = data.minPassScore;
+      obj["subCategoryId"] = data.subCategoryId;
+      obj["questions"] = [];
+      for (let j = 0; j < data["questions"].length; j++) {
+        let obj1 = {};
+        obj1["id"] = data["questions"][j]["_id"];
+        obj1["title"] = data["questions"][j][`title_${language}`];
+        obj1["image"] = data["questions"][j][`image`];
+        obj1["quizId"] = data["questions"][j][`quizId`];
+        obj1["options"] = data["questions"][j][`options`];
+        obj["questions"].push(obj1);
+      }
+      quizes.push(obj);
+      return quizes;
     } catch (error) {
       throw new ConflictError(error.message);
     }
