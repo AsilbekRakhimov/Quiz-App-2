@@ -1,10 +1,13 @@
 import { ConflictError } from "../../errors/conflict.error.js";
+import { Question } from "../questions/question.schema.js";
 import { Option } from "./option.schema.js";
 
 class OptionService {
   #_model;
+  #_questionModel;
   constructor() {
     this.#_model = Option;
+    this.#_questionModel = Question;
   }
 
   // create option
@@ -23,6 +26,14 @@ class OptionService {
         isCorrect,
         questionId,
       });
+      await this.#_questionModel.updateOne(
+        { _id: questionId },
+        {
+          $push: {
+            options: data,
+          },
+        }
+      );
       return data;
     } catch (error) {
       throw new ConflictError(error.message);

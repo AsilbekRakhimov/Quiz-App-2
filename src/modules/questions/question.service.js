@@ -39,8 +39,28 @@ class QuestionService {
     try {
       const data = await this.#_model
         .find()
+        .populate("options")
         .select(`_id title_${language} image quizId options`);
-      return data;
+      const questions = [];
+      // console.log(data[0].options);
+      for (let i = 0; i < data.length; i++) {
+        const obj = {};
+        obj["id"] = data[i]["_id"];
+        obj["title"] = data[i][`title_${language}`];
+        obj["image"] = data[i]["image"];
+        obj["quizId"] = data[i]["quizId"];
+        obj["options"] = [];
+        for (let j = 0; j < data[i]["options"].length; j++) {
+          let obj1 = {};
+          obj1["id"] = data[i]["options"][j][`_id`];
+          obj1["option"] = data[i]["options"][j][`option_${language}`];
+          obj1["isCorrect"] = data[i]["options"][j][`isCorrect`];
+          obj1["questionId"] = data[i]["options"][j][`questionId`];
+          obj["options"].push(obj1);
+        }
+        questions.push(obj);
+      }
+      return questions;
     } catch (error) {
       throw new ConflictError(error.message);
     }
@@ -51,8 +71,29 @@ class QuestionService {
     try {
       const data = await this.#_model
         .findById(id)
+        .populate("options")
         .select(`_id title_${language} image quizId options`);
-      return data;
+      if (!data) {
+        return null
+      }
+      const questions = [];
+      const obj = {};
+      obj["id"] = data["_id"];
+      obj["title"] = data[`title_${language}`];
+      obj["image"] = data["image"];
+      obj["quizId"] = data["quizId"];
+      obj["options"] = [];
+      for (let j = 0; j < data["options"].length; j++) {
+        let obj1 = {};
+        obj1["id"] = data["options"][j][`_id`];
+        obj1["option"] = data["options"][j][`option_${language}`];
+        obj1["isCorrect"] = data["options"][j][`isCorrect`];
+        obj1["questionId"] = data["options"][j][`questionId`];
+        obj["options"].push(obj1);
+      }
+      questions.push(obj);
+
+      return questions;
     } catch (error) {
       throw new ConflictError(error.message);
     }
